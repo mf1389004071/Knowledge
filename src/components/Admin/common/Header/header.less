@@ -1,0 +1,58 @@
+header{
+	height: 80px;
+	line-height: 80px;
+	background: #a4c1ff;
+	display: flex;
+	justify-content:space-between;
+	padding-left: 5%;
+	h2{
+		font-size: 20px;
+		color:#0050ff;
+		font-weight: normal;
+		i{
+			display: inline-block;
+			width: 34px;
+			height: 28px;
+			margin-right: 10px;
+			vertical-align: middle;
+			background: url('../../../../assets/admin/common/logo3.png') no-repeat center;
+		}
+	}
+	ul{
+		display: flex;
+		justify-content:space-between;
+		margin-right: 52px;
+		li{
+			width: 74px;
+			text-align: center;
+			font-size: 0;
+			&.info{
+				background: url('../../../../assets/admin/common/info.png') no-repeat center;
+			}
+			&.user{
+				background: #fbfcff;
+				.avator{
+					vertical-align: middle;
+				}
+				.el-dropdown{
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+.el-dropdown-menu{
+	top: 75px !important;
+	width: 184px !important;
+	box-shadow: 0 2px 4px rgba(210,223,250,.5), 0 0 6px rgba(210,223,250,.5);
+	background: #fbfcff;
+	li{
+		height: 60px;
+		line-height: 60px;
+		font-size: 16px;
+		color:#2252BA;
+		&+li{
+			border-top: 1px solid #D2DFFA;
+		}
+	}
+}

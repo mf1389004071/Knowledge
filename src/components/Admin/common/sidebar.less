@@ -1,0 +1,43 @@
+.common-sidebar{
+	min-height: 100%;
+	background: #001645;
+	h3{
+		height: 80px;
+		line-height: 80px;
+		text-align: center;
+		color: #fff;
+		background: #001136;
+		font-size: 0;
+		background: url('../../../assets/admin/common/logo1.png') no-repeat center;
+	}
+	ul{
+		background: transparent;
+		li{
+			height: 80px;
+			line-height: 80px;
+			font-size: 18px;
+			color: #c0d4ff;
+			text-align: center;
+			position: relative;
+			&:hover,&.is-active{
+				background: #003699;
+			}
+			& + li{
+				border-top: 1px solid #0f2a62;
+			}
+			i{
+				position: absolute;
+				width: 22px;
+				height: 100%;
+				background: url('../../../assets/admin/common/group.png') no-repeat center;
+				left: 48px;
+				&.user{
+					background-image: url('../../../assets/admin/common/user.png');
+				}
+				&.app{
+					background-image: url('../../../assets/admin/common/app.png');
+				}
+			}
+		}
+	}
+}

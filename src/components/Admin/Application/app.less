@@ -1,0 +1,104 @@
+
+.app{
+	.edit{
+		.el-form{
+			padding-top: 40px;
+		}
+		.member{
+			display: inline-block;
+			width: 300px;
+		}
+		.el-form-item__content{
+			> img{
+				margin-left: 30px;
+			}
+			> span{
+				font-size: 16px;
+				color:#2252BA;
+			}
+		}
+		.select-leader{
+			input{
+				width: 120px !important;
+			}
+		}
+		.text{
+			label{
+				width: 100px;
+				margin-right: 12px;
+			}
+		}
+		.el-textarea{
+			textarea{
+				border-radius: 0;
+			}
+		}
+	}
+	.el-tag{
+		margin-left: 12px;
+	}
+	.app-list{
+		border-top: 4px solid #C7D2EA;
+		padding-top: 24px;
+		li{
+			display: inline-block;
+			width: 150px;
+			margin-left: 100px;
+			margin-bottom: 30px;
+			cursor: pointer;
+			&:nth-child(5n+1){
+				margin-left: 0;
+			}
+			span{
+				display: inline-block;
+				width: 150px;
+				height: 150px;
+				line-height: 150px;
+				box-sizing: border-box;
+				background: #fff;
+				border-radius: 10px;
+				border: 1px solid #D9D9D9;
+				text-align: center;
+				img{
+					vertical-align: middle;
+				}
+			}
+			p{
+				font-size: 16px;
+				color:#091140;
+				text-align: center;
+				margin-top: 17px;
+			}
+		}
+	}
+	.el-dialog__body p label{
+		width: 100px;
+	}
+	.avatar-uploader{
+		margin-left: 30px;
+		img{
+			width: 68px;
+			height: 69px;
+			vertical-align: middle;
+			background: url('../../../assets/home/app_img.png') no-repeat center;
+		}
+	}
+	textarea{
+		resize:none;
+		margin-left: 12px;
+		width: 270px;
+		background: #EFEFEF;
+		border-color:#bfcbd9;
+		padding: 3px 10px;
+		box-sizing: border-box;
+		font-size: 14px;
+		outline: 0;
+		border-radius: 0;
+		&:hover{
+			border-color: #8391a5;
+		}
+		&:focus{
+			border-color: #1661EA;
+		}
+	}
+}

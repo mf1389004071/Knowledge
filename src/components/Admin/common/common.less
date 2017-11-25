@@ -1,0 +1,151 @@
+.adminCommon{
+	margin-left: 5%;
+	max-width: 1180px;
+	.main-header{
+		margin-top: 25px;
+		margin-bottom: 17px;
+	}
+	
+	.main-list{
+		color:#2252BA;
+		text-align: center;
+		line-height: 55px;
+		dt{
+			display: flex;
+			justify-content:space-between;
+			background: #dde4f2;
+			font-size: 18px;
+			span{
+				flex:1;
+				& + span{
+					border-left: 1px solid #C6D2EA;
+				}
+			}
+		}
+		dl{
+			display: flex;
+			justify-content:space-between;
+			font-size: 16px;
+			cursor: pointer;
+			position: relative;
+			&:nth-of-type(even){
+				background: #F6F6F6;
+			}
+			&:nth-of-type(odd){
+				background: #fff;
+			}
+			&:hover,&.click{
+				box-shadow: 0 0 1px 2px #d3e1ea;
+    			z-index: 1;
+			}
+			span{
+				flex:1;
+			}
+		}
+	}
+
+	// 模态框
+	.el-dialog{
+		min-width: 500px;
+	}
+	.el-dialog__header{
+		height: 56px ;
+		line-height: 56px;
+		background: #D0D9EC;
+		padding: 0;
+		font-size: 18px;
+		.el-dialog__title{
+			font-weight: normal;
+			margin-left: 22px;
+			color: #2252BA;
+		}
+		.el-dialog__headerbtn{
+			margin-right: 14px;
+			.el-dialog__close {
+			    cursor: pointer;
+			    color: #bfcbd9;
+			    border: 2px solid #1F66E7;
+			    border-radius: 50%;
+			    width: 26px;
+			    height: 26px;
+			    line-height: 28px;
+			    text-align: center;
+			    color: #1F66E7;
+			    font-size: 12px;
+			    font-weight: bold;
+			}
+		}
+		
+	}
+	.el-dialog__body{
+		.el-form-item{
+			label{
+				font-size: 16px;
+				color:#989898;
+			}
+			.el-select{
+				margin-left: 12px;
+				input{
+					margin-left: 0;
+				}
+			}
+			input{
+				width: 270px;
+				background: #EFEFEF;
+				border-radius: 0;
+				margin-left: 12px;
+				&:focus{
+					border-color: #1661EA;
+				}
+			}
+			.editable{
+				font-size: 16px;
+				color:#2252BA;
+				margin-left: 12px;
+			}
+		}
+		p{
+			display: flex;
+    		justify-content: space-between;
+    		margin-bottom: 22px;
+    		label{
+    			width: 80px;
+			    font-size: 16px;
+			    color: #989898;
+			    text-align: right;
+			    padding: 11px 12px 11px 0;
+			    box-sizing: border-box;
+			    margin-right: 12px;
+    		}
+    		span{
+		    	flex: 1;
+				line-height: 36px;
+				font-size: 16px;
+				color:#343434;
+		    }
+		}
+	}
+	.el-dialog__footer{
+		padding: 47px 0;
+		text-align: center;
+		border-top: 1px solid #d0dae4;
+		.dialog-footer{
+			display: flex;
+			justify-content:space-around;
+			button{
+				width: 115px;
+				height: 30px;
+				line-height: 30px;
+				background: #1661EA;
+				border-radius: 30px;
+				border: 0 none;
+				font-size: 16px;
+				padding: 0;
+			}
+			.grey{
+				background: #BDBDBD;
+				color:#fff;
+			}
+		}
+	}
+}

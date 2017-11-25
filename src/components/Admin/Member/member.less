@@ -1,0 +1,55 @@
+.dialog-header{
+	display: flex;
+	justify-content:space-between;
+	span{
+		text-align: center;
+		flex:1;
+		color: #1041AD;
+	}
+}
+.el-dialog__body{
+	padding: 3px !important;
+	ul{
+		li{
+			display: flex;
+			justify-content:space-between;
+			span{
+				flex:1;
+				margin: 3px;
+				input{
+					height: 50px;
+					line-height: 50px;
+					border-radius: 0;
+				}
+				.el-select{
+					width: 100%;
+				}
+			}
+			&.add{
+				text-align: center;
+				span{
+					flex:none;
+					width: 140px;
+					height: 40px;
+					line-height: 40px;
+					background: #7FA6EF;
+					margin: 40px auto;
+					border-radius: 40px;
+					font-size: 16px;
+					color:#fff;
+					cursor: pointer;
+					&::before{
+						content:'';
+						display: inline-block;
+						width: 15px;
+						height: 15px;
+						vertical-align: middle;
+						margin-right: 10px;
+						background: url('../../../assets/admin/common/add.png') no-repeat center;
+
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,944 @@
+<template>
+	<div id="structure">
+		<div class="rec_header">
+			<div class="search_box">
+				<div class="select clearfloat" v-for="(searchItem,index) in search">
+					<span>{{searchItem.title}}</span>
+					<el-select v-model="searchItem.value" allow-create filterable :placeholder="searchItem.msg" @change="select(searchItem.value,searchItem.tag);getOptions(searchItem.tag)">
+					    <el-option
+					      v-for="item in searchItem.data"
+					      :key="item.value"
+					      :label="item.label"
+					      :value="item.value">
+					    </el-option>
+					</el-select>
+				</div>
+			</div>
+
+			<!-- <div class="select clearfloat">
+				<span>文本种类</span>
+				<el-select v-model="search[1].value" allow-create filterable placeholder="点击选择文本种类" @change="select">
+				    <el-option
+				      v-for="item in search[1].data"
+				      :key="item.value"
+				      :label="item.label"
+				      :value="item.value">
+				    </el-option>
+				 </el-select>
+			</div> -->
+		</div>
+		<div class="main">
+			<div class="main_top clearfloat">
+				<textarea name="" id="" readonly>{{this.$store.state.search.content}}</textarea>
+				<p>
+					<el-button @click="getEntity();getRelation()">显示内容</el-button>
+				</p>
+			</div>
+
+			<div class="main_center">
+				<div class="line ishover" v-for="(item,index) in List">
+					<el-button v-if="item.category == 'entity'">{{item.name}}</el-button>
+					<span v-if="item.category == 'relation'">{{item.name}}</span>
+					<div class="tip">
+						<span>修改</span>
+						<span>删除</span>
+					</div>
+				</div>
+				<!-- <div class="line ishover">
+					<span>并且</span>
+					<div class="tip">
+						<span>修改</span>
+						<span>删除</span>
+					</div>
+				</div>
+				<div class="line ishover">
+					<el-button>不能应当</el-button>
+					<div class="tip">
+						<span>修改</span>
+						<span>删除</span>
+					</div>
+				</div>
+				<div class="line ishover">
+					<span>认定</span>
+					<div class="tip">
+						<span>修改</span>
+						<span>删除</span>
+					</div>
+				</div> -->
+				<div class="line">
+					<el-button class="last-button">待选实体</el-button>
+				</div>
+				<div class="line">
+					<span class="last-span">待选关系</span>
+				</div>
+
+				<div class="list_box">
+					<div class="list entity">
+						<h2>实体内容</h2>
+						<ul>
+
+							<li v-for="(item,index) in entityList">
+								<el-tooltip class="item" placement="top">
+									<div slot="content">类型：{{item.type}}<br/>属性：{{item.properties}}</div>
+									<span draggable="true" @dragstart="dragstart($event,item)">{{item.name}}</span>
+								</el-tooltip>
+							</li>
+
+							<li><i></i></li>
+						</ul>
+					</div>
+					<div class="list relation">
+						<h2>关系内容</h2>
+						<ul>
+							<li v-for="item in relationList">
+								<el-tooltip class="item" placement="top">
+									<div slot="content">类型：{{item.type}}<br/>属性：{{item.properties}}</div>
+									<span draggable="true" @dragstart="dragstart($event,item)">{{item.name}}</span>
+								</el-tooltip>
+							</li>
+							<li><i></i></li>
+						</ul>
+					</div>
+					<div class="drag">
+						<div class="drag_box">
+							<div id="drag_content">
+								请将左侧
+								<p class="blue" @drop="drop" @dragenter="dragenter($event)" @dragover.prevent="dragover">[实体内容]</p>
+								拽到此虚线框内
+							</div>
+						</div>
+						<p>
+							<el-button>保存知识链</el-button>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="main_bottom">
+				<el-tabs type="border-card">
+				  <el-tab-pane>
+				    <span slot="label"><i class="p1"></i> 已完成知识链</span>
+				    <ul>
+				    	<li class="clearfloat">
+				    		<div class="left">
+				    			<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button @click="log">编辑</el-button><el-button>删除</el-button></div>
+								  <el-button>感情不和</el-button>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button>编辑</el-button><el-button>删除</el-button></div>
+								  <span>并且</span>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button @click="log">编辑</el-button><el-button>删除</el-button></div>
+								  <el-button>分居</el-button>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button>编辑</el-button><el-button>删除</el-button></div>
+								  <span>达到</span>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button @click="log">编辑</el-button><el-button>删除</el-button></div>
+								  <el-button>分居大于两年</el-button>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button>编辑</el-button><el-button>删除</el-button></div>
+								  <span>并且</span>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button @click="log">编辑</el-button><el-button>删除</el-button></div>
+								  <el-button>调解无效</el-button>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button>编辑</el-button><el-button>删除</el-button></div>
+								  <span>准予</span>
+								</el-tooltip>
+								<el-tooltip placement="top" disabled>
+								  <div slot="content"><el-button @click="log">编辑</el-button><el-button>删除</el-button></div>
+								  <el-button>离婚</el-button>
+								</el-tooltip>
+				    		</div>
+				    		<div class="right">
+				    			<span>修改</span>
+				    			<span>删除</span>
+				    		</div>
+				    	</li>
+
+				    </ul>
+				  </el-tab-pane>
+				  <el-tab-pane>
+				    <span slot="label"><i class="p2"></i> 查看知识链图谱</span>
+				    <div>
+				    	111
+				    </div>
+				  </el-tab-pane>
+				</el-tabs>
+				<span>操作</span>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+import axios from '../../js/axios-api.js';
+	export default{
+		data() {
+	      return {
+	        value: '',
+	        search:[
+	        	{
+	        		title:'案由',
+	        		msg:'点击选择案由',
+	        		tag:'case_cause',
+	        		value:'',
+	        		data:[]
+	        	},
+	        	{
+	        		title:'类型',
+	        		msg:'点击选择类型',
+	        		tag:'type',
+	        		value:'',
+	        		data:[]
+	        	},
+	        	{
+	        		title:'范围',
+	        		msg:'点击选择范围',
+	        		tag:'apply_area',
+	        		value:'',
+	        		data:[]
+	        	},
+	        	{
+	        		title:'法条',
+	        		msg:'点击选择法条',
+	        		tag:'title',
+	        		value:'',
+	        		data:[]
+	        	},
+	        	{
+	        		title:'条目',
+	        		msg:'点击选择条目',
+	        		tag:'num',
+	        		value:'',
+	        		data:[]
+	        	},
+
+	        ],
+	        searchParams:{},
+	        entityList:[],
+	        relationList:[],
+	        List:[
+	        	{
+	        		name:"疾病",
+	        		type:"类型",
+	        		properties:"属性",
+	        		category:"entity"
+	        	},
+	        	{
+	        		name:"并且",
+	        		type:"类型",
+	        		properties:"属性",
+	        		category:"relation"
+	        	},
+	        ]
+	      }
+	    },
+	    mounted(){
+	    	const params = {
+	    		is_checked : true
+	    	}
+	    	// 案由列表
+	    	this.getCause(params);
+	    	// 文本类型列表
+	    	this.getType(params);
+
+
+	    	// 范围列表
+	    	this.getArea(params);
+
+	    	// 法条列表
+	    	this.getTitle(params);
+
+	    	// 根据id获取实体列表
+	    	this.getEntity();
+
+	    	// 根据id获取关系列表
+	    	this.getRelation();
+
+
+	    },
+	    methods:{
+	    	drop(event){
+	    		console.log(11, event);
+	    		// event.dataTransfer.effectAllowed = "move";
+	    		const item = {
+	    			name : event.dataTransfer.getData("name"),
+	    			type : event.dataTransfer.getData("type"),
+	    			properties : event.dataTransfer.getData("properties"),
+	    			category : event.dataTransfer.getData("category"),
+	    		}
+	    		console.log(event, item);
+	    		console.log('长度',(this.List.length+1) % 2)
+	    		if(item.category == 'relation' && (this.List.length + 1) % 2 == 0){
+					this.List.push(item);
+					$('.last-span').css('display', 'none');
+					$('#drag_content > p').attr('class','blue');
+					console.log('偶数')
+	    		}
+	    		if(item.category == 'entity' && (this.List.length + 1) % 2 == 1){
+	    			this.List.push(item);
+	    			$('.last-button').css('display', 'none');
+	    			$('#drag_content > p').attr('class','green');
+	    			console.log('奇数')
+	    		}
+
+
+	    	},
+	    	dragenter(event){
+	    		console.log('111', event);
+	    		// event.dataTransfer.effectAllowed = "move";
+	    		// $('#drag_content > p').css({
+	    		// 	property1: 'value1',
+	    		// 	property2: 'value2'
+	    		// });
+	    	},
+	    	dragover(event){
+	    		// event.dataTransfer.effectAllowed = "move";
+	    	},
+	    	dragstart(event,item){
+	    		// event.dataTransfer.effectAllowed = "move";
+	    		console.log('start',event,item);
+	    		event.dataTransfer.setData('name',item.name);
+	    		event.dataTransfer.setData('type',item.type);
+	    		event.dataTransfer.setData('properties',item.properties);
+	    		event.dataTransfer.setData('category',item.category);
+
+
+	    		console.log('data',event.dataTransfer)
+	    		// item.category =
+	    		// console.log()
+
+	    		// $('.entity .item').eq(i).
+	    		// const info = this.List[i];
+	    		// event.dataTransfer.effectAllowed = "move";
+	    		// event.dataTransfer.setData("name",this.List[i].name);
+	    		// console.log(event.dataTransfer)
+	    		// console.log($('.entity .item').eq(i));
+	    		// console.log(event.currentTarget)
+	    		console.log(item)
+	    	},
+	    	// 获取案由列表
+	    	getCause(myparams){
+	    		var _this = this;
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/cause/list',{params:myparams})
+				     .then(function(res){
+				     	_this.search[0].data=[];
+				     	res.data.data.map(function(elem, index) {
+				     		_this.search[0].data.push({
+				     			value : elem._id,
+				     			label : elem.name
+				     		})
+				     	})
+				     }).catch(function(res){
+		    		 	console.log(res);
+		    		 });
+	    	},
+	    	// 获取文本类型
+	    	getType(myparams){
+	    		var _this = this;
+
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/type/list',{params:myparams})
+				     .then(function(res){
+				     	_this.search[1].data = [];
+				     	res.data.data.map(function(elem, index) {
+				     		_this.search[1].data.push({
+				     			value : elem._id,
+				     			label : elem.name
+				     		})
+				     	})
+				     }).catch(function(res){
+		    		 	console.log(res);
+		    		 });
+	    	},
+	    	// 获取范围
+	    	getArea(myparams){
+	    		var _this = this;
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/area/list',{params:myparams})
+				     .then(function(res){
+				     	_this.search[2].data = [];
+				     	res.data.data.map(function(elem, index) {
+				     		_this.search[2].data.push({
+				     			value : elem,
+				     			label : elem
+				     		})
+				     	})
+				     }).catch(function(res){
+		    		 	console.log(res);
+		    		 });
+	    	},
+	    	// 获取法条
+	    	getTitle(myparams){
+	    		var _this = this;
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/title',{params:myparams})
+				     .then(function(res){
+				     	_this.search[3].data = [];
+				     	res.data.data.map(function(elem, index) {
+				     		_this.search[3].data.push({
+				     			value : elem.title,
+				     			label : elem.title
+				     		})
+				     	})
+				     }).catch(function(res){
+		    		 	console.log(res);
+		    		 });
+	    	},
+	    	// 获取条目
+	    	getNum(myparams){
+	    		var _this = this;
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/num/list',{params:myparams})
+				     .then(function(res){
+				     	_this.search[4].data = [];
+				     	res.data.data.map(function(elem, index) {
+				     		_this.search[4].data.push({
+				     			value : elem.num,
+				     			label : elem.name
+				     		})
+				     	})
+				     }).catch(function(res){
+		    		 	console.log(res);
+		    		 });
+	    	},
+	    	// 获取实体
+	    	getEntity(){
+	    		var _this = this;
+
+	    		// console.log('666',_this.$store.state.search.content_id)
+	    		if(_this.$store.state.search.content_id){
+	    			// _this.entityList = [];
+	    			axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/entity/source?source_id='+_this.$store.state.search.content_id)
+			    	     .then(function(res){
+			    	     	_this.entityList = [];
+			    	     	console.log('333',res.data.data)
+			    	     	res.data.data.map(function(elem, index) {
+			    	     		_this.entityList.push({
+			    	     			name:elem.name,  //实体名
+			    	     			properties:elem.properties[0],//实体属性
+			    	     			type:elem.type,//实体类型id
+			    	     			category:'entity'
+
+			    	     		})
+			    	     	})
+			    	     }).catch(function(err){
+			    	     	console.log(err);
+			    	     })
+	    		}
+
+	    	 //    console.log('444',_this.entityList)
+
+	    	    // this.entityList = [
+	    	    // 	{
+	    	    // 		name:'道路',
+	    	    // 		properties:"结果",
+	    	    // 		type:'行为实体',
+	    	    // 		category:'entity'
+	    	    // 	},
+	    	    // 	{
+	    	    // 		name:'道路2',
+	    	    // 		properties:"结果",
+	    	    // 		type:'行为实体',
+	    	    // 		category:'entity'
+	    	    // 	},
+	    	    // ]
+	    	},
+	    	// 获取关系
+	    	getRelation(){
+	    		var _this = this;
+	    		console.log(_this.$store.state.search.content_id)
+	    		if(_this.$store.state.search.content_id){
+	    			// _this.relationList = [];
+	    			axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/relation/source?source_id='+_this.$store.state.search.content_id)
+			    	     .then(function(res){
+			    	     	res.data.data.map(function(elem, index) {
+			    	     		_this.relationList.push({
+			    	     			name:elem.name,  //实体名
+			    	     			properties:elem.properties[0],//实体属性
+			    	     			type:elem.type,//实体类型id
+			    	     			category:'relation'
+			    	     		})
+			    	     	})
+			    	     }).catch(function(err){
+			    	     	console.log(err);
+			    	     })
+	    		}
+
+	    	 //    console.log('222',_this.relationList)
+
+	    	    // this.relationList = [
+	    	    // 	{
+	    	    // 		name:'保护',
+	    	    // 		properties:"结果",
+	    	    // 		type:'能动关系',
+	    	    // 		category:'relation'
+	    	    // 	},
+	    	    // ]
+	    	},
+	    	select(el,tag){
+	    		var _this = this;
+	    		this.searchParams[tag] = el;
+	    		const params = this.searchParams;
+	    		axios.get(_this.$store.state.urls[_this.$store.state.url_index] + '/api/nlp/knowledge/source/list',{params:params})
+		    		 .then(function(res){
+		    		 	_this.$store.state.search.content = res.data.data[0].content;
+		    		 	// state.search.total = res.data.pager.total;
+		    		 	_this.$store.state.search.content_id = res.data.data[0]._id;
+		    		 	console.log(res.data.data[0])
+		    		 }).catch(function(res){
+		    		 	_this.$store.state.search.content = '没有数据';
+		    		 })
+		    	console.log('文章id',_this.$store.state.search.content_id)
+	    	},
+	    	log(){
+
+	    	},
+	    	getOptions(tag){
+	    		var _this = this;
+	    		const params = {
+	    			case_cause : _this.searchParams.case_cause?_this.searchParams.case_cause : '',
+	    			type_id : _this.searchParams.type?_this.searchParams.type : '',
+					apply_area : _this.searchParams.apply_area?_this.searchParams.apply_area : '',
+					is_checked : true,
+	    		}
+
+	    		switch(tag) {
+	    			case 'case_cause':
+	    				_this.getType(params);
+	    				_this.getTitle(params);
+	    				_this.getArea(params);
+				    case 'type':
+				    	_this.getCause(params);
+	    				_this.getTitle(params);
+	    				_this.getArea(params);
+				    case 'apply_area':
+				    	_this.getCause(params);
+	    				_this.getTitle(params);
+	    				_this.getType(params);
+	    			case 'title':
+	    				const titleParams = {
+	    					title : _this.searchParams.title,
+	    					is_checked : true,
+	    				}
+	    				_this.getNum(params);
+
+	    		}
+	    	},
+	    }
+	}
+</script>
+
+<style lang="less">
+#structure{
+	.header{
+		height: 81px;
+		line-height: 81px;
+		background: #F6F6F6;
+		.search_item{
+			height: 36px;
+			width: 298px;
+			border:1px solid #2281E9;
+		}
+	}
+	.rec_header{
+		height: 82px;
+		background: #F6F6F6;
+		.select:first-child{
+		}
+		.search_box{
+			width: 1180px;
+			margin-left: 70px;
+			display: flex;
+			justify-content:space-between;
+		}
+		.select{
+			width: 216px;
+			height: 34px;
+			line-height: 34px;
+			border: 1px solid #2281E9;
+			background: #fff;
+			margin-top: 24px;
+			span{
+				display: inline-block;
+				float: left;
+				font-size: 14px;
+				color:#3D3D3D;
+				// width: 91px;
+				padding: 0 18px 0 15px;
+				height: 100%;
+				border-right: 1px solid #2281E9;
+			}
+			.el-select{
+				float: left;
+				width: 154px;
+				height: 100%;
+				.el-input{
+					height: 100%;
+					font-size: 14px;
+				}
+			}
+			.el-input__inner{
+				border: none;
+				height: 100%;
+				color:#006fe6;
+			}
+			.el-select .el-input .el-input__icon{
+				color: #2F86E3;
+				font-size: 14px;
+			}
+		}
+	}
+	.main{
+		width: 1180px;
+		margin-left: 70px;
+		.main_top{
+			margin-top: 40px;
+			textarea{
+				width: 1134px;
+				height: 110px;
+				resize:none;
+				border-color: #4078B4;
+				color: #000;
+				font-size: 16px;
+				line-height: 26px;
+				padding: 10px 22px;
+			}
+			p{
+				float: right;
+				margin-top: 26px;
+				button{
+					display: inline-block;
+					width: 156px;
+					height: 34px;
+					padding: 10px 0;
+					border-color: #2281E9;
+					border-radius: 2px;
+					background: #2281E9;
+					margin-left: 47px;
+					font-size: 16px;
+					color: #fff;
+				}
+			}
+		}
+		.main_center{
+			.line{
+					position: relative;
+					display: inline-block;
+					button{
+						background: #1278E7;
+						font-size: 16px;
+						color: #fff;
+						&.last-button{
+							color: #ACACAC;
+							font-size: 14px;
+							background: #F6F6F6;
+							border:1px dotted #D2D2D2;
+						}
+					}
+					&.ishover:hover{
+						button{
+							background: #F60062;
+							font-size: 20px;
+							border-color: #F60062;
+							width: 150px;
+						}
+						.tip{
+							opacity: 1;
+						}
+						> span{
+							color: #F60062;
+							border:2px solid #F60062;
+							padding:9px 10px;
+							top: 0;
+							width: 60px;
+						}
+					}
+					> span{
+						border-bottom: 1px solid #37BE29;
+						display: inline-block;
+						color: #37BE29;
+						font-size: 16px;
+						padding: 2px 5px;
+						position: relative;
+						top: -6px;
+						cursor: pointer;
+						text-align: center;
+						&.last-span{
+							color:#ACACAC;
+							font-size: 14px;
+							border-color: #ACACAC;
+						}
+					}
+					.tip{
+						position: absolute;
+						height: 100%;
+						width: 100%;
+						text-align: center;
+						line-height: 100%;
+						bottom:100%;
+						left: 0;
+						border-color: #000;
+						opacity: 0;
+						span{
+							display: inline-block;
+							width: 30px;
+							height: 30px;
+							margin: 0 5px;
+							cursor: pointer;
+							background: url('../../assets/r3/edit.png') no-repeat center;
+							font-size: 0;
+							&:hover{
+								background-image: url('../../assets/r3/edit2.png');
+							}
+							&:last-child{
+								background-image: url('../../assets/r3/delete.png');
+								&:hover{
+									background-image: url('../../assets/r3/delete2.png');
+								}
+							}
+						}
+					}
+			}
+
+			.list_box{
+				margin-top: 40px;
+				display: flex;
+				justify-content:space-around;
+				.list{
+					width: 289px;
+					height: 357px;
+					text-align: center;
+					border:1px solid #E2E2E2;
+					overflow: hidden;
+					&.relation{
+						h2{
+							background: #37BE29;
+						}
+						li:last-child i{
+							background-image: url('../../assets/r3/addRe.png');
+						}
+					}
+					h2{
+						background: #2281E9;
+						font-size: 18px;
+						color: #fff;
+						height: 51px;
+						line-height: 51px;
+						font-weight: normal;
+					}
+					ul{
+						overflow-y: auto;
+						height: 306px;
+					}
+					li{
+						height: 41px;
+						line-height: 41px;
+						font-size: 16px;
+						color: #293D52;
+						cursor: pointer;
+						padding: 5px 30px;
+						span{
+							display: block;
+						}
+						&:nth-child(even){
+							background: #F5F5F5
+						}
+						&:last-child{
+							i{
+								display: block;
+								width: 100%;
+								height: 100%;
+								background: url('../../assets/r3/addEn.png') no-repeat center;
+								cursor: pointer;
+							}
+						}
+					}
+				}
+				.drag{
+					padding-top: 100px;
+					.drag_box{
+						width: 334px;
+						height: 150px;
+						border:1px dotted #DCDCDC;
+						font-size: 16px;
+						> div{
+							text-align: center;
+							margin-top: 50px;
+							p{
+								line-height: 40px;
+								width: 80px;
+								margin: 0 auto;
+							}
+						}
+						.blue{
+							color: #006CE3;
+						}
+						.green{
+							color: #37be29;
+						}
+					}
+					> p {
+						text-align: center;
+						margin-top: 20px;
+						button{
+							display: inline-block;
+							width: 156px;
+							height: 34px;
+							padding: 10px 0;
+							border-color: #2281E9;
+							border-radius: 2px;
+							background: #2281E9;
+							font-size: 16px;
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+		.main_bottom{
+			margin-top: 40px;
+			position: relative;
+			& > span{
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: block;
+				width: 193px;
+				height: 42px;
+				line-height: 42px;
+				text-align: center;
+				color:#004DA1;
+				border-left: 1px solid #004DA1;
+				font-size: 16px;
+			}
+			.el-tabs--border-card{
+				border:none;
+				box-shadow: none;
+				.el-tabs__header{
+					border:none;
+					background: #C7CED6;
+					.el-tabs__item{
+						font-size: 18px;
+						padding-left: 30px;
+						> span{
+							position: relative;
+							padding-left: 36px;
+						}
+						i{
+							display: inline-block;
+							position: absolute;
+							top:-1px;
+							left: 0;
+							width: 24px;
+							height: 24px;
+							background: url('../../assets/r3/p1_1.png') no-repeat center;
+							&.p2{
+								background-image: url('../../assets/r3/p2_1.png');
+							}
+						}
+						&.is-active{
+							background: #C7CED6;
+							color:#016FE7;
+							border-right-color:#016FE7;
+							.p1{
+								background-image: url('../../assets/r3/p1_2.png');
+							}
+							.p2{
+								background-image: url('../../assets/r3/p2_2.png');
+							}
+						}
+					}
+				}
+				.el-tabs__content{
+					padding: 50px 0;
+					.el-tab-pane > ul{
+						li{
+							min-height: 112px;
+							.left{
+								width: 950px;
+								float: left;
+								padding-left: 14px;
+								button{
+									background: #1278E7;
+									font-size: 16px;
+									color: #fff;
+									margin-bottom: 40px;
+								}
+								> span{
+									border-bottom: 1px solid #37BE29;
+									color: #37BE29;
+									font-size: 16px;
+									padding: 2px 2px;
+									position: relative;
+									top: -6px;
+								}
+							}
+							.right{
+								border-left: 1px solid #C7CED6;
+								width: 193px;
+								float: right;
+								display: block;
+								height: 112px;
+								line-height: 112px;
+								text-align: center;
+								span{
+									display: inline-block;
+									width: 24px;
+									height: 100%;
+									background: url('../../assets/change.png') no-repeat center;
+									font-size: 0;
+									margin: 0 30px;
+									cursor: pointer;
+									& + span{
+										background-image: url('../../assets/delete.png');
+									}
+								}
+							}
+							& + li{
+								border-bottom: 1px dotted #E0E4E9;
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+		.box{
+			padding-top: 37px;
+			> p{
+				margin-top: 41px;
+				text-align: right;
+				button{
+					height: 37px;
+					border-radius: 2px;
+					font-size: 16px;
+					&:first-child{
+						width: 179px;
+						background: #E7E7E7;
+						color:#484B4D;
+					}
+					&:last-child{
+						width: 239px;
+						background: #2281E9;
+						color:#fff;
+					}
+				}
+			}
+		}
+
+	}
+
+}
+.el-tooltip__popper.is-light{
+	border:none !important;
+	background: transparent !important;
+}
+
+</style>
